@@ -13,7 +13,7 @@ import {
     MagmaInput, 
     RetreatButton
 } from './components/VolcanicUI';
-import { StockDivergenceChart, GhostPatternRadar, StrategyVisualizer } from './components/Visualizers';
+import { SdaWidget, GpaWidget, StrategyWidget } from './components/ModuleWidgets';
 import { sendMessageToGemini, generateVolcanicBackground } from './services/gemini';
 
 // --- Icons ---
@@ -22,6 +22,38 @@ const IconRefresh = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" hei
 
 // Fallback background in case API fails
 const FALLBACK_BG_GRADIENT = null; // Will trigger CSS gradient fallback
+
+// --- MOCK DATA GENERATORS (For local simulation) ---
+const generateMockStockData = (): StockDataPoint[] => {
+    const data: StockDataPoint[] = [];
+    let price = 100;
+    for (let i = 0; i < 20; i++) {
+        price = price + (Math.random() - 0.5) * 10;
+        data.push({
+            time: `T-${20-i}`,
+            price: Number(price.toFixed(2)),
+            maWeekly: Number((price * (0.9 + Math.random() * 0.2)).toFixed(2)),
+            divergence: Math.floor(Math.random() * 100)
+        });
+    }
+    return data;
+};
+
+const generateMockGhosts = (): GhostPattern[] => [
+    { id: '1', name: 'Phantom Head & Shoulders', symbol: 'BTC', score: 92, description: 'High probability reversal detected in shadow order books.', correlatedSymbol: 'ETH' },
+    { id: '2', name: 'Nazgul Dive', symbol: 'TSLA', score: 85, description: 'Sudden liquidity void detected.', correlatedSymbol: 'SPY' },
+    { id: '3', name: 'Void Spike', symbol: 'GME', score: 78, description: 'Anomalous volume spike without price movement.', correlatedSymbol: 'AMC' },
+];
+
+const generateMockStrategy = (): OptionStrategy => ({
+    type: 'Condor',
+    symbol: 'SPY',
+    profitProb: 88,
+    maxProfit: 450,
+    maxLoss: 1200,
+    breakevenLow: 410,
+    breakevenHigh: 440
+});
 
 export default function App() {
   // Navigation State
@@ -53,12 +85,17 @@ export default function App() {
 
   // Load Background
   useEffect(() => {
-    const cachedBg = localStorage.getItem('mordor_bg_cache_v7'); // New version key
+    const cachedBg = localStorage.getItem('mordor_bg_cache_v7');
     if (cachedBg && cachedBg.startsWith('data:image')) {
         setBgImage(cachedBg);
     } else {
         handleGenerateWorld();
     }
+    
+    // Init default mock data
+    setChartData(generateMockStockData());
+    setGhostData(generateMockGhosts());
+    setStrategyData(generateMockStrategy());
   }, []);
 
   const handleGenerateWorld = async () => {
@@ -128,6 +165,20 @@ export default function App() {
     setIsLoading(false);
   };
 
+  // --- Local Simulators (Linked to Widgets) ---
+  const simulateSda = (ticker: string) => {
+      setChartData(generateMockStockData());
+      // Optionally add a system message
+  };
+  
+  const simulateGpa = () => {
+      setGhostData(generateMockGhosts().map(g => ({ ...g, score: Math.floor(Math.random() * 100) })));
+  };
+
+  const simulateStrategy = () => {
+      setStrategyData({ ...generateMockStrategy(), profitProb: 60 + Math.floor(Math.random() * 30) });
+  };
+
   // --- Navigation Logic ---
   const handleNavigate = (zone: string) => {
       if (zone === 'center') setCameraFocus('center');
@@ -181,34 +232,19 @@ export default function App() {
 
   const RightContent = (
       <ObsidianPanel title="MOUNT DOOM VOLATILITY" className="h-full">
-              <div className="h-full flex flex-col p-4">
-                  <div className="flex justify-between items-end mb-4 border-b border-red-500/20 pb-2">
-                      <span className="text-xs text-orange-500 font-mono animate-pulse tracking-widest">>> SECTOR: ORODRUIN</span>
-                      <span className="text-xs text-red-500 font-mono">STATUS: ERUPTION IMMINENT</span>
-                  </div>
-                  <div className="flex-grow">
-                    <StockDivergenceChart data={chartData} />
-                  </div>
-              </div>
+             <SdaWidget data={chartData} onSimulate={simulateSda} />
       </ObsidianPanel>
   );
 
   const LeftContent = (
       <ObsidianPanel title="DEAD MARSHES GHOST RADAR" className="h-full">
-              <div className="h-full flex flex-col justify-center items-center p-6 bg-gradient-to-b from-transparent to-green-950/20">
-                 <GhostPatternRadar patterns={ghostData} />
-                 <div className="mt-4 text-center">
-                    <p className="text-green-500/50 text-xs font-mono tracking-widest">SCANNING FOR HIDDEN CORRELATIONS</p>
-                 </div>
-              </div>
+            <GpaWidget data={ghostData} onScan={simulateGpa} />
       </ObsidianPanel>
   );
 
   const BottomContent = (
       <ObsidianPanel title="BLACK GATE STRATEGY BUILDER" className="h-full">
-               <div className="h-full flex items-center justify-center p-6 bg-gradient-to-b from-transparent to-gray-900/40">
-                   {strategyData ? <StrategyVisualizer strategy={strategyData} /> : <div className="text-white/30 text-xl font-cinzel animate-pulse tracking-widest">AWAITING ORDERS...</div>}
-               </div>
+            <StrategyWidget strategy={strategyData} onBuild={simulateStrategy} />
       </ObsidianPanel>
   );
 
