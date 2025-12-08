@@ -86,7 +86,8 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
       }
     });
 
-    const responseText = result.response.text;
+    // Correctly access text from the result object directly
+    const responseText = result.text;
     if (!responseText) throw new Error("No response from Gemini");
     
     return JSON.parse(responseText);
