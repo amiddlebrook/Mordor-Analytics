@@ -1,0 +1,5 @@
+{
+  "name": "Barad-dûr Analytics",
+  "description": "A hyperrealistic, 3D volcanic stock analysis platform powered by Gemini. Features Stock Divergence Analysis (SDA), Ghost Pattern detection, and Options Strategy building within an immersive Mordor-inspired interface.",
+  "requestFramePermissions": []
+}
