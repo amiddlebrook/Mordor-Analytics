@@ -1,17 +1,21 @@
 {
   "name": "mordor-analytics",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run typecheck && npm test && npm run build",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
+    "@google/genai": "^1.31.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "@google/genai": "^1.31.0",
     "recharts": "2.12.3",
     "uuid": "9.0.1"
   },
