@@ -1,101 +1,14 @@
-
-<!DOCTYPE html>
-<html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Barad-dûr Analytics</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              cinzel: ['Cinzel', 'serif'],
-              tech: ['Rajdhani', 'sans-serif'],
-              mono: ['Roboto Mono', 'monospace'],
-            },
-            colors: {
-              magma: {
-                50: '#fff1f2',
-                100: '#ffe4e6',
-                200: '#fecdd3',
-                300: '#fda4af',
-                400: '#fb7185',
-                500: '#f43f5e',
-                600: '#e11d48',
-                700: '#be123c',
-                800: '#9f1239',
-                900: '#881337',
-                950: '#4c0519',
-              },
-            },
-            animation: {
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'spin-slow': 'spin 12s linear infinite',
-            },
-          },
-        },
-      }
-    </script>
-    <style>
-      body {
-        background-color: #050000;
-        color: #e5e5e5;
-        overflow: hidden;
-        margin: 0;
-      }
-      
-      .heat-distortion {
-        filter: url('#heat-wave');
-      }
-
-      .text-glow {
-        text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-      }
-      
-      /* Smooth image transitions */
-      img {
-          -webkit-user-drag: none;
-          user-select: none;
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "react-dom": "https://esm.sh/react-dom@18.2.0",
-    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "recharts": "https://esm.sh/recharts@2.12.3?external=react,react-dom",
-    "uuid": "https://esm.sh/uuid@9.0.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/"
-  }
-}
-</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c121c" />
+  <meta name="description" content="Mordor Analytics — Cloudflare-native financial research, technical signals, and options payoff modeling from imported CSV market data." />
+  <title>Mordor Analytics | Edge Intelligence Terminal</title>
 </head>
-  <body>
-    <div id="root"></div>
-    <!-- SVG Filters for Heat Distortion -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <defs>
-        <filter id="heat-wave">
-          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="3" result="turbulence" seed="5">
-            <animate attributeName="baseFrequency" dur="10s" values="0.01 0.02;0.01 0.04;0.01 0.02" repeatCount="indefinite" />
-          </feTurbulence>
-          <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-        <radialGradient id="vignette-grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
-            <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
-        </radialGradient>
-      </defs>
-    </svg>
-  </body>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>
