@@ -43,3 +43,19 @@ jobs:
           fi
       - name: Deploy Cloudflare Worker
         run: npx --yes wrangler@4 deploy
+      - name: Smoke-test production site
+        run: |
+          set -euo pipefail
+          url="https://mordor-analytics.averymiddlebrook2014.workers.dev"
+          for attempt in 1 2 3 4 5; do
+            if curl -fsS --max-time 20 "$url/api/health" | grep -q '"ok":true'; then
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "::error::Production health endpoint is unreachable"
+              exit 1
+            fi
+            sleep 5
+          done
+          curl -fsS --max-time 20 "$url/" | grep -q 'id="root"'
+          echo "Production smoke test passed: $url"
