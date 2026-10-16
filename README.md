@@ -19,7 +19,7 @@ Mordor Analytics is a React/TypeScript financial analytics workspace hosted as a
 
 ## Architecture
 
-\`\`\`
+```
 Browser / Vite React
  ├─ analytics.mjs: CSV parser + calculations (local, no network)
  ├─ Overview / Signals / Strategy Lab
@@ -27,17 +27,17 @@ Browser / Vite React
         Cloudflare Worker (worker/index.ts)
          └─ Workers AI (@cf/meta/llama-3.1-8b-instruct-fp8)
 Cloudflare Static Assets (dist/) serve the application at the same origin
-\`\`\`
+```
 
 No D1, R2, KV, third-party stock feed, backend server, hosted database, or recurring paid service is required.
 
 ## CSV format
 
-\`\`\`csv
+```csv
 Date,Symbol,Close,Volume
 2026-01-02,ABC,101.25,10000
 2026-01-05,ABC,102.10,12300
-\`\`\`
+```
 
 Columns **Date** (YYYY-MM-DD) and **Close** are required; **Symbol** and **Volume** are optional. Without Symbol, rows are grouped as IMPORTED. At least 5 valid dates per symbol are needed. For moving averages and RSI, use 50+ sessions. Files are processed locally and **not uploaded**.
 
@@ -45,17 +45,17 @@ Columns **Date** (YYYY-MM-DD) and **Close** are required; **Symbol** and **Volum
 
 Prerequisites: Node.js 22 and a free Cloudflare account for optional AI calls.
 
-\`\`\`bash
+```bash
 npm ci --legacy-peer-deps
 npm run check
 npm run dev
-\`\`\`
+```
 
 Vite runs on http://localhost:3000. For Workers AI routes in a separate terminal, run:
 
-\`\`\`bash
+```bash
 npx --yes wrangler@4 dev
-\`\`\`
+```
 
 No AI access? All visualizations, import and options simulations still run without it.
 
@@ -63,19 +63,19 @@ No AI access? All visualizations, import and options simulations still run witho
 
 1. Create a free Cloudflare account. No payment method or paid plan is required for standard Workers + free AI allocation.
 2. In the **GitHub repository** → Settings → Secrets and variables → Actions, add:
-   - \`CLOUDFLARE_ACCOUNT_ID\` — your Cloudflare account ID
-   - \`CLOUDFLARE_API_TOKEN\` — a scoped token permitted to edit Workers scripts and bindings
-3. Push to \`main\`. The GitHub workflow runs typecheck, tests, build, then deploys with \`wrangler@4 deploy\`.
-4. Site: \`https://mordor-analytics.<your-workers-subdomain>.workers.dev\`. The actual URL appears in the deployment log.
+   - `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account ID
+   - `CLOUDFLARE_API_TOKEN` — a scoped token permitted to edit Workers scripts and bindings
+3. Push to `main`. The GitHub workflow runs typecheck, tests, build, then deploys with `wrangler@4 deploy`.
+4. Site: `https://mordor-analytics.<your-workers-subdomain>.workers.dev`. The actual URL appears in the deployment log.
 
 Alternatively deploy yourself with:
 
-\`\`\`bash
+```bash
 npm ci --legacy-peer-deps
 npm run build
 npx --yes wrangler@4 login
 npx --yes wrangler@4 deploy
-\`\`\`
+```
 
 CI intentionally skips the deploy step with a warning when required secrets have not yet been configured; it cannot create your Cloudflare account or GitHub Actions secrets.
 
@@ -83,17 +83,17 @@ CI intentionally skips the deploy step with a warning when required secrets have
 
 ## Test
 
-\`\`\`bash
+```bash
 npm test
 npm run typecheck
 npm run build
-\`\`\`
+```
 
 The tests cover parsing, indicators, correlation, and exact iron-condor contract payoffs. GitHub Actions validates all pull requests.
 
 ## Security
 
-- No \`VITE_*\`/Gemini secrets are embedded in client JavaScript
+- No `VITE_*`/Gemini secrets are embedded in client JavaScript
 - No browser AI SDK or external image generation API
 - Same-origin Worker API, 12 KB request limit, no CORS enabling
 - No source CSV transmitted to AI — only summary indicators
